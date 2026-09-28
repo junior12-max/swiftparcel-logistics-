@@ -16,7 +16,7 @@ export default async function handler(request: Request) {
     const hubList = hubs.map((hub: string) => `<li style="margin:6px 0">${escapeHtml(hub)}</li>`).join('');
     const trackUrl = `${process.env.PUBLIC_APP_URL ?? 'https://swiftparcel-logistics.vercel.app'}/?tracking=${encodeURIComponent(body.tracking_code)}`;
     const { data, error } = await resend.emails.send({
-      from: 'SwiftParcel <onboarding@resend.dev>',
+      from: 'onboarding@resend.dev',
       to: [body.to_email],
       replyTo: 'swiftparcel.support@gmail.com',
       subject: `Shipment confirmed · ${body.tracking_code}`,

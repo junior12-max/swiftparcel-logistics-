@@ -188,10 +188,12 @@ export default function BookShipment({ onTrackRequest }: Props) {
         total_cost: formatPrice(estimatedCost),
         hubs: ['Local Sorting Office', 'Export Customs', 'Airport Cargo Terminal', 'Import Customs', 'Regional Hub', 'Destination Delivery'],
       });
-      setEmailToast({ type: 'success', msg: 'Confirmation email sent successfully!' });
-    } catch (emailErr) {
-      console.warn('Failed to send confirmation email:', emailErr);
-    }
+          setEmailToast({ type: 'success', msg: 'Email Sent Successfully' });
+      } catch (emailErr) {
+        const message = emailErr instanceof Error ? emailErr.message : 'Confirmation email failed';
+        console.warn('Failed to send confirmation email:', message);
+        setEmailToast({ type: 'error', msg: message });
+      }
 
     setBooking({
       code,
@@ -230,12 +232,16 @@ export default function BookShipment({ onTrackRequest }: Props) {
   if (booking) {
     return (
       <section id="book" className="py-16 bg-white">
-        {emailToast && emailToast.type === 'success' && (
-          <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 max-w-md w-full mx-4">
-            <div className="flex items-start gap-3 rounded-xl shadow-lg p-4 bg-green-50 border border-green-200">
-              <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-              <p className="text-sm flex-1 text-green-800">{emailToast.msg}</p>
-              <button onClick={() => setEmailToast(null)} className="hover:opacity-70 text-green-600">
+        {emailToast && (
+          <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 max-w-md w-full mx-4" role="alert">
+            <div className={`flex items-start gap-3 rounded-xl shadow-lg p-4 ${emailToast.type === 'success' ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'}`}>
+              {emailToast.type === 'success' ? (
+                <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+              ) : (
+                <X className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+              )}
+              <p className={`text-sm flex-1 ${emailToast.type === 'success' ? 'text-green-800' : 'text-red-800'}`}>{emailToast.msg}</p>
+              <button onClick={() => setEmailToast(null)} className={`hover:opacity-70 ${emailToast.type === 'success' ? 'text-green-600' : 'text-red-600'}`} aria-label="Dismiss email notification">
                 <X className="w-4 h-4" />
               </button>
             </div>
