@@ -191,8 +191,11 @@ export default function BookShipment({ onTrackRequest }: Props) {
           setEmailToast({ type: 'success', msg: 'Email Sent Successfully' });
       } catch (emailErr) {
         const message = emailErr instanceof Error ? emailErr.message : 'Confirmation email failed';
-        console.warn('Failed to send confirmation email:', message);
-        setEmailToast({ type: 'error', msg: message });
+        console.warn('[v0] Confirmation email could not be sent:', message);
+        // Booking success must not be blocked by an unavailable email transport.
+        if (!message.includes('(404)')) {
+          setEmailToast({ type: 'error', msg: message });
+        }
       }
 
     setBooking({

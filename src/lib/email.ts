@@ -20,6 +20,7 @@ export async function sendBookingEmail(params: BookingEmailParams): Promise<void
   });
   if (!response.ok) {
     const payload = await response.json().catch(() => ({}));
-    throw new Error(payload.error ?? `Confirmation email failed (${response.status})`);
+    const detail = typeof payload.error === 'string' ? payload.error : `Confirmation email failed (${response.status})`;
+    throw new Error(detail);
   }
 }
