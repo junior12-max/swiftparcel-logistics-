@@ -18,7 +18,7 @@ export default async function handler(request: Request) {
     const { data, error } = await resend.emails.send({
       from: 'SwiftParcel <onboarding@resend.dev>',
       to: [body.to_email],
-      replyTo: body.reply_to,
+      replyTo: 'swiftparcel.support@gmail.com',
       subject: `Shipment confirmed · ${body.tracking_code}`,
       html: `<div style="font-family:Arial,sans-serif;max-width:560px;margin:auto;color:#17201b"><h2 style="color:#15803d">Shipment confirmed</h2><p>Hi ${escapeHtml(body.to_name ?? '')}, your SwiftParcel shipment is booked.</p><p><strong>Tracking ID:</strong> ${escapeHtml(body.tracking_code)}</p><p><strong>Route:</strong><br>${escapeHtml(body.pickup_address)} → ${escapeHtml(body.delivery_address)}</p><p><strong>Parcel:</strong> ${escapeHtml(String(body.package_count))} × ${escapeHtml(body.package_type)} · ${escapeHtml(String(body.weight))} kg · ${escapeHtml(body.total_cost)}</p><h3>Estimated logistics hubs</h3><ul>${hubList}</ul><a href="${trackUrl}" style="display:inline-block;background:#15803d;color:#fff;padding:12px 18px;border-radius:8px;text-decoration:none;font-weight:bold">Track My Package</a></div>`,
     }, { idempotencyKey: `booking-confirmation/${body.tracking_code}` });
