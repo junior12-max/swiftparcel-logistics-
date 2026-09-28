@@ -9,6 +9,8 @@ type Waypoint = {
   type: 'origin' | 'sorting' | 'customs' | 'local' | 'destination';
 };
 
+export const routeHubLabels = ['Local Sorting Office', 'Export Customs', 'Airport Cargo Terminal', 'Import Customs', 'Regional Hub', 'Destination Delivery'];
+
 type Props = {
   origin: Coords;
   destination: Coords;
@@ -36,24 +38,32 @@ function buildWaypoints(origin: Coords, destination: Coords): Waypoint[] {
   const perpLat = -dLng * 0.08;
   const perpLng = dLat * 0.08;
 
+  const originAirport = origin.lng < -100 ? 'LAX Cargo Terminal' : origin.lng < -50 ? 'JFK Airport Cargo' : 'Heathrow Cargo Terminal';
+  const destinationAirport = destination.lng < -100 ? 'LAX Import Customs' : destination.lng < -50 ? 'JFK Import Customs' : 'Heathrow Import Customs';
+
   return [
-    { coords: origin, label: 'Origin Facility', type: 'origin' },
+    { coords: origin, label: 'Local Sorting Office', type: 'origin' },
     {
-      coords: offsetCoords(lerpCoords(origin, mid, 0.33), perpLat, perpLng),
-      label: 'Regional Sorting Hub',
-      type: 'sorting',
-    },
-    {
-      coords: offsetCoords(mid, perpLat * 1.5, perpLng * 1.5),
-      label: 'Customs Terminal',
+      coords: offsetCoords(lerpCoords(origin, mid, 0.25), perpLat, perpLng),
+      label: 'Export Customs',
       type: 'customs',
     },
     {
-      coords: offsetCoords(lerpCoords(mid, destination, 0.66), perpLat * 0.5, perpLng * 0.5),
-      label: 'Local Distribution Center',
+      coords: offsetCoords(lerpCoords(origin, mid, 0.6), perpLat * 1.4, perpLng * 1.4),
+      label: originAirport,
+      type: 'sorting',
+    },
+    {
+      coords: offsetCoords(lerpCoords(mid, destination, 0.25), perpLat * 1.2, perpLng * 1.2),
+      label: destinationAirport,
+      type: 'customs',
+    },
+    {
+      coords: offsetCoords(lerpCoords(mid, destination, 0.65), perpLat * 0.5, perpLng * 0.5),
+      label: 'Regional Distribution Hub',
       type: 'local',
     },
-    { coords: destination, label: 'Destination', type: 'destination' },
+    { coords: destination, label: 'Destination Delivery', type: 'destination' },
   ];
 }
 

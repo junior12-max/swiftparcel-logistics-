@@ -179,15 +179,14 @@ export default function BookShipment({ onTrackRequest }: Props) {
         to_email: recipientEmail,
         to_name: recipientName,
         tracking_code: code,
-        shipment_details: `${packageCount} × ${selectedType.label} | Chargeable weight: ${Math.round(chargeableWeight * 100) / 100}kg | ${pickupAddress} → ${deliveryAddress} | Est. cost: ${formatPrice(estimatedCost)}`,
         reply_to: 'swiftparcel.support@gmail.com',
-        sender_name: senderName,
-        recipient_name: recipientName,
         pickup_address: pickupAddress,
         delivery_address: deliveryAddress,
         package_count: packageCount,
         package_type: selectedType.label,
-        estimated_cost: formatPrice(estimatedCost),
+        weight: Math.round(chargeableWeight * 100) / 100,
+        total_cost: formatPrice(estimatedCost),
+        hubs: ['Local Sorting Office', 'Export Customs', 'Airport Cargo Terminal', 'Import Customs', 'Regional Hub', 'Destination Delivery'],
       });
       setEmailToast({ type: 'success', msg: 'Confirmation email sent successfully!' });
     } catch (emailErr) {
